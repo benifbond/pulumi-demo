@@ -1,0 +1,7 @@
+name: second_app
+runtime: nodejs
+description: Create a standard infrastructure for a frontend react project on AWS
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: https://www.pulumi.com/ai/api/project/35eec5fe-a722-4106-bf83-e8f8d8d2bd6c.zip

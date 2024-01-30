@@ -1,0 +1,13 @@
+{
+  "name": "second_app",
+  "description": "Create a standard infrastructure for a frontend react project on AWS",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "dependencies": {
+    "@pulumi/pulumi": "*",
+    "@pulumi/aws": "6.13.3"
+  }
+}
