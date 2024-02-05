@@ -1,0 +1,7 @@
+name: my-serverless-app
+runtime: nodejs
+description: A TypeScript program to deploy a serverless application on AWS
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: serverless-aws-typescript

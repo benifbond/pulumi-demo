@@ -1,0 +1,5 @@
+config:
+  aws:region: eu-central-1
+  my-cloudfront-s3:errorDocument: error.html
+  my-cloudfront-s3:indexDocument: index.html
+  my-cloudfront-s3:path: ../vue-project/dist

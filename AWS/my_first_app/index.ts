@@ -10,6 +10,8 @@ const mongoHost = config.require('mongoHost');
 const database = config.require('database');
 const nodeEnvironment = config.require('nodeEnvironment');
 const protocol = config.require('protocol');
+const mongoUsername = config.require("mongoUsername");
+export const mongoPassword = config.requireSecret("mongoPassword");
 
 const stack = pulumi.getStack();
 
@@ -51,33 +53,33 @@ const mongoContainer = new docker.Container('mongoContainer', {
       aliases: ['mongo'],
     },
   ],
+  envs: [
+    `MONGO_INITDB_ROOT_USERNAME=${mongoUsername}`,
+    ` pulumi.interpolate.MONGO_INITDB_ROOT_PASSWORD=${mongoPassword}`,
+  ]
 });
 
 // Create the backend container
-const backendContainer = new docker.Container(
-  'backendContainer',
-  {
-    name: `backend-${stack}`,
-    image: backend.repoDigest,
-    ports: [
+const backendContainer = new docker.Container("backendContainer", {
+  name: `backend-${stack}`,
+  image: backend.baseImageName,
+  ports: [
       {
-        internal: backendPort,
-        external: backendPort,
+          internal: backendPort,
+          external: backendPort,
       },
-    ],
-    envs: [
-      `DATABASE_HOST=${mongoHost}`,
-      `DATABASE_NAME=${database}`,
+  ],
+  envs: [
+      pulumi.interpolate`DATABASE_HOST=mongodb://${mongoUsername}:${mongoPassword}@${mongoHost}:${mongoPort}`,
+      `DATABASE_NAME=${database}?authSource=admin`,
       `NODE_ENV=${nodeEnvironment}`,
-    ],
-    networksAdvanced: [
+  ],
+  networksAdvanced: [
       {
-        name: network.name,
+          name: network.name,
       },
-    ],
-  },
-  { dependsOn: [mongoContainer] }
-);
+  ],
+}, { dependsOn: [ mongoContainer ]});
 
 // Create the frontend container
 const frontendContainer = new docker.Container('frontendContainer', {
@@ -90,9 +92,9 @@ const frontendContainer = new docker.Container('frontendContainer', {
     },
   ],
   envs: [
-    `PORT=${frontendPort}`,
-    `HTTP_PROXY=backend-${stack}:${backendPort}`,
-    `PROXY_PROTOCOL=${protocol}`,
+    pulumi.interpolate`DATABASE_HOST=mongodb://${mongoUsername}:${mongoPassword}@${mongoHost}:${mongoPort}`,
+    `DATABASE_NAME=${database}?authSource=admin`,
+    `NODE_ENV=${nodeEnvironment}`,
   ],
   networksAdvanced: [
     {

@@ -1,0 +1,5 @@
+config:
+  aws:region: eu-central-1
+  demo-pulumi:errorDocument: error.html
+  demo-pulumi:indexDocument: index.html
+  demo-pulumi:path: ./www
