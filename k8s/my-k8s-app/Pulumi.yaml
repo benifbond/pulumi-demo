@@ -1,0 +1,7 @@
+name: my-k8s-app
+runtime: nodejs
+description: A TypeScript program to deploy a web application onto a Kubernetes cluster
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: ""
